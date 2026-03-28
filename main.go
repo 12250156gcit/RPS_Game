@@ -4,15 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"rockpaperscs/rps"
 	"text/template"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	// //html := `<strong>Hello World ok</strong>`
-
-	// http.ServeFile(w, r, "index.html")
-	// w.Header().Set("Content-Type", "text/html")
-	// //fmt.Fprintf(w, html)
 
 	tmpl, err := template.ParseFiles("index.html")
 
@@ -27,10 +23,18 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func playHandler(w http.ResponseWriter, r *http.Request) {
+	winner, cp, rr := rps.PlayRound(1) // player chose paper
+	fmt.Println("winner:", winner)
+	fmt.Println("computer choice:", cp)
+	fmt.Println("round result:", rr)
+}
+
 func main() {
 	var port = 8080
 
-	http.HandleFunc("/", homePage)
+	// http.HandleFunc("/", homePage)
+	http.HandleFunc("/", playHandler)
 
 	log.Println("Starting web server on port", port)
 	http.ListenAndServe(":8080", nil)
