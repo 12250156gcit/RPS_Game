@@ -1,16 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
     <title>rock,paper,scissors</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="conainer">
-   <h1 class="mt-4">Rock, Paper, Scissors</h1> <hr> <p id="player_choice">&nbsp;</p> <p id="computer_choice">&nbsp;</p> <p class="text-danger" id="result">&nbsp;</p> <hr> <p>Choose rock, paper, or scissors!</p> <button class="btn btn-outline-secondary">Rock</button> <button class="btn btn-outline-danger">Paper</button> <button class="btn btn-outline-success">Scissors</button>
+      <h1 class="mt-4">Rock, Paper, Scissors</h1>
+      <hr />
+      <p id="player_choice">&nbsp;</p>
+      <p id="computer_choice">&nbsp;</p>
+      <p class="text-danger" id="result">&nbsp;</p>
+      <hr />
+      <p>Choose rock, paper, or scissors!</p>
+      <br>
+      <button class="btn btn-outline-secondary" onclick="choose(0);">Rock</button>
+      <button class="btn btn-outline-danger" onclick="choose(1);">Paper</button>
+      <button class="btn btn-outline-success" onclick="choose(2);">Scissors</button>  
     </div>
- 
-    
-</body>
+  </body>
+  <script>
+    function choose(x){
+      fetch("/play?c="+x)
+      .then(response => response.json())
+      .then(data => {
+       console.log(data)
+           if (x == 0) {
+      document.getElementById("player_choice").innerHTML = "You clicked ROCK";
+    } else if (x == 1) {
+      document.getElementById("player_choice").innerHTML = "You clicked PAPER";
+    } else {
+      document.getElementById("player_choice").innerHTML = "You clicked SCISSORS";
+    }
+    // printing result to the page
+    document.getElementById("computer_choice").innerHTML = data.ComputerChoice;
+    document.getElementById("result").innerHTML =data.RoundResult;
+      });
+    }
+
+</script>
 </html>

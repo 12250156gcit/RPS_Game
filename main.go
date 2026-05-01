@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,7 +14,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("index.html")
 
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
 		return
 	}
 	err = tmpl.Execute(w, nil)
@@ -24,17 +25,29 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func playHandler(w http.ResponseWriter, r *http.Request) {
-	winner, cp, rr := rps.PlayRound(1) // player chose paper
-	fmt.Println("winner:", winner)
-	fmt.Println("computer choice:", cp)
-	fmt.Println("round result:", rr)
+
+	c := r.URL.Query().Get("c")
+
+	var playerValue int
+	fmt.Sscanf(c, "%d", &playerValue)
+
+	result := rps.PlayRound(playerValue)
+
+	jsObj, err := json.Marshal(result)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsObj)
 }
 
 func main() {
 	var port = 8080
 
-	// http.HandleFunc("/", homePage)
-	http.HandleFunc("/", playHandler)
+	http.HandleFunc("/", homePage)
+	http.HandleFunc("/play", playHandler)
 
 	log.Println("Starting web server on port", port)
 	http.ListenAndServe(":8080", nil)
@@ -44,3 +57,5 @@ func main() {
 		return
 	}
 }
+
+// page 33
